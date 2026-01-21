@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import CopyCodeButton from '../components/CopyCodeButton';
+import getComponentCSSString from '../utils/getComponentCSSString';
 
 const VARIANTS = ['primary', 'disabled', 'secondary', 'tertiary', 'quaternary', 'error', 'success', 'alert'];
 const SIZES = ['xs', 'sm', 'md', 'lg'];
@@ -42,12 +43,7 @@ function getCodeString(variant, size, state, showLeadingIcon, leadingIcon, showT
 }
 
 function getCSSString(variant, size, state, showLeadingIcon, showTrailingIcon, showText, label) {
-  let classes = `btn btn-${variant} btn-${size}`;
-  if (state && state !== 'default') classes += ` is-${state}`;
-  let iconLeading = showLeadingIcon ? '<span class="btn-icon btn-icon-leading">...</span> ' : '';
-  let iconTrailing = showTrailingIcon ? ' <span class="btn-icon btn-icon-trailing">...</span>' : '';
-  let text = showText ? label : '';
-  return `<button class="${classes}"${state === 'disabled' ? ' disabled' : ''}>\n  ${iconLeading}${text}${iconTrailing}\n</button>`;
+  return getComponentCSSString('button', { variant, size, state, showLeadingIcon, showTrailingIcon });
 }
 
 function getPythonString(variant, size, state, showLeadingIcon, showTrailingIcon, showText, label) {
@@ -58,7 +54,7 @@ function getPythonString(variant, size, state, showLeadingIcon, showTrailingIcon
 
 function ButtonGallery() {
   return (
-    <div className="card" style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: 'auto' }}>
       <h2>All Variants, Sizes, and States</h2>
       <div style={{ width: '90%', overflowX: 'auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: `120px repeat(${VARIANTS.length}, 1fr)`, gap: 32, alignItems: 'start', width: '100%' }}>
@@ -98,6 +94,211 @@ function ButtonGallery() {
   );
 }
 
+const ICON = (
+  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" /></svg>
+);
+
+const ButtonSpecs = () => (
+  <div className="specs-container">
+    {/* Anatomy */}
+    <section className="specs-section">
+      <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Anatomy</h2>
+      <div style={{ display: 'flex', gap: 48, alignItems: 'flex-start' }}>
+        <div style={{ border: '2px solid #b39ddb', borderRadius: 8, padding: 32, minWidth: 400, position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 80, position: 'relative' }}>
+            <ButtonPreview
+              variant="primary"
+              size="md"
+              label="Button Label"
+              showLeadingIcon
+              leadingIcon={ICON}
+              showTrailingIcon
+              trailingIcon={ICON}
+            />
+            {/* Callouts */}
+            <div style={{ position: 'absolute', left: 38, top: 8 }}><AnatomyCallout n={1} /></div>
+            <div style={{ position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)' }}><AnatomyCallout n={2} /></div>
+            <div style={{ position: 'absolute', right: 38, top: 8 }}><AnatomyCallout n={3} /></div>
+          </div>
+        </div>
+        <div style={{ minWidth: 220 }}>
+          <AnatomyLegend />
+        </div>
+      </div>
+    </section>
+
+    {/* Properties: Size */}
+    <section className="specs-section">
+      <h2 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Properties</h2>
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '16px 0 24px 0' }}>Size</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+        {[
+          { size: 'sm', radius: 6, text: 'body/sm' },
+          { size: 'xs', radius: 4, text: 'body/xs' },
+          { size: 'md', radius: 8, text: 'body/md' },
+          { size: 'lg', radius: 12, text: 'body/lg' },
+        ].map(({ size, radius, text }) => (
+          <div key={size} style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+            <div className="specs-preview">
+              <ButtonPreview
+                variant="primary"
+                size={size}
+                label="Button Label"
+                showText={true}
+              />
+            </div>
+            <div className="specs-info" style={{ minWidth: 120 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{size}</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>◇ btn</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>Border radius: {radius}</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>T <b>Button</b></div>
+              <div style={{ fontSize: 13, color: '#b91c1c', background: '#f3f4f6', borderRadius: 4, display: 'inline-block', padding: '2px 8px' }}>Text style: {text}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Properties: Type */}
+    <section className="specs-section">
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '16px 0 24px 0' }}>Type</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+        {[
+          { variant: 'primary', label: 'Primary', fill: '--surface-primary-action', text: '--text-on-action' },
+          { variant: 'primary', label: 'Disabled', fill: '--surface-disabled', text: '--text-disabled', state: 'disabled' },
+          { variant: 'secondary', label: 'Secondary', fill: '--surface-secondary-action', text: '--text-action' },
+          { variant: 'tertiary', label: 'Tertiary', fill: 'transparent', text: '--text-action' },
+          { variant: 'quaternary', label: 'Quaternary', fill: 'none', text: '--text-action' },
+          { variant: 'error', label: 'Error', fill: '--surface-error', text: '--text-error' },
+          { variant: 'success', label: 'Success', fill: '--surface-success', text: '--text-success' },
+          { variant: 'alert', label: 'Alert', fill: '--surface-alert', text: '--text-alert' },
+        ].map(({ variant, label, fill, text, state }) => (
+          <div key={label} style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+            <div className="specs-preview">
+              <ButtonPreview
+                variant={variant}
+                size="md"
+                label="Button Label"
+                showText={true}
+                showLeadingIcon
+                leadingIcon={ICON}
+                showTrailingIcon
+                trailingIcon={ICON}
+                state={state}
+              />
+            </div>
+            <div className="specs-info" style={{ minWidth: 120 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{label.toLowerCase()}</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>◇ btn</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>Background: <code>{fill}</code></div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>T <b>Button</b></div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>Text color: <code>{text}</code></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Properties: State */}
+    <section className="specs-section">
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '16px 0 24px 0' }}>State</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+        {[
+          { state: 'default', label: 'Default', fill: '--surface-primary-action' },
+          { state: 'hover', label: 'Hover', fill: '--surface-primary-action-hover' },
+          { state: 'pressed', label: 'Pressed', fill: '--surface-primary-action-pressed' },
+        ].map(({ state, label, fill }) => (
+          <div key={label} style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+            <div className="specs-preview">
+              <ButtonPreview
+                variant="primary"
+                size="md"
+                label="Button Label"
+                showText={true}
+                showLeadingIcon
+                leadingIcon={ICON}
+                showTrailingIcon
+                trailingIcon={ICON}
+                state={state === 'default' ? undefined : state}
+              />
+            </div>
+            <div className="specs-info" style={{ minWidth: 120 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>{label.toLowerCase()}</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>◇ btn</div>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>Background color: <code>{fill}</code></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Show Leading/Trailing Icon, Show Text */}
+    <section className="specs-section">
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '16px 0 24px 0' }}>Show Leading Icon</h3>
+      <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+        <div className="specs-preview">
+          <ButtonPreview variant="primary" size="md" label="Button Label" showText={true} showLeadingIcon leadingIcon={ICON} />
+        </div>
+        <div className="specs-info" style={{ minWidth: 120 }}>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Property type: Boolean</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Default: true</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Associated icon: <b>nav-arrow-down</b></div>
+        </div>
+      </div>
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '24px 0' }}>Show Trailing Icon</h3>
+      <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+        <div className="specs-preview">
+          <ButtonPreview variant="primary" size="md" label="Button Label" showText={true} showTrailingIcon trailingIcon={ICON} />
+        </div>
+        <div className="specs-info" style={{ minWidth: 120 }}>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Property type: Boolean</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Default: true</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Associated icon: <b>nav-arrow-down</b></div>
+        </div>
+      </div>
+      <h3 style={{ fontSize: 22, fontWeight: 600, margin: '24px 0' }}>Show Text</h3>
+      <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+        <div className="specs-preview">
+          <ButtonPreview variant="primary" size="md" label="Button Label" showText={true} />
+        </div>
+        <div className="specs-info" style={{ minWidth: 120 }}>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Property type: Boolean</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Default: true</div>
+          <div style={{ fontSize: 14, marginBottom: 2 }}>Associated text: <b>Button</b></div>
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
+function AnatomyCallout({ n }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+      <div style={{ background: '#b45309', color: 'white', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15 }}>{n}</div>
+      <div style={{ width: 2, height: 24, background: '#b45309' }} />
+    </div>
+  );
+}
+
+function AnatomyLegend() {
+  return (
+    <ol style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 16 }}>
+      <li style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <span style={{ background: '#b45309', color: 'white', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15 }}>1</span>
+        <span><b>nav-arrow-down</b><br /><span style={{ fontWeight: 400, fontSize: 13 }}>Depends on: <b>nav-arrow-down</b><br />Weight: Dynamic</span></span>
+      </li>
+      <li style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <span style={{ background: '#b45309', color: 'white', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15 }}>2</span>
+        <span><b>Button</b><br /><span style={{ fontWeight: 400, fontSize: 13 }}>Text style: <b>body/md</b></span></span>
+      </li>
+      <li style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <span style={{ background: '#b45309', color: 'white', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15 }}>3</span>
+        <span><b>nav-arrow-down</b><br /><span style={{ fontWeight: 400, fontSize: 13 }}>Depends on: <b>nav-arrow-down</b><br />Weight: Dynamic</span></span>
+      </li>
+    </ol>
+  );
+}
+
 export default function ButtonDoc() {
   const [variant, setVariant] = useState('primary');
   const [size, setSize] = useState('md');
@@ -125,7 +326,7 @@ export default function ButtonDoc() {
   }
 
   return (
-    <div className="main-content">
+    <>
       <h1>Button</h1>
       <div className="card" style={{ marginBottom: 24, padding: 32 }}>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', marginBottom: 24 }}>
@@ -212,31 +413,14 @@ export default function ButtonDoc() {
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
-        <label>
-          State for Gallery:
-          <select value={galleryState} onChange={e => setGalleryState(e.target.value)} style={{ marginLeft: 8 }}>
-            {STATES.map(s => <option key={s}>{s}</option>)}
-          </select>
-        </label>
+
+      <div className="card" style={{ padding: '32px' }}>
+        <ButtonSpecs />
       </div>
-      <ButtonGallery />
-      <div className="card">
-        <h2>Specs</h2>
-        <table className="table-specs">
-          <tbody>
-            <tr><th>Property</th><th>Value</th></tr>
-            <tr><td>Padding</td><td>{size === 'sm' ? 'var(--scale-300) var(--scale-400)' : size === 'md' ? 'var(--scale-400) var(--scale-500)' : 'var(--scale-500) var(--scale-600)'}</td></tr>
-            <tr><td>Border Radius</td><td>var(--border-radius-lg)</td></tr>
-            <tr><td>Font</td><td>var(--font-family-body), var(--font-weight-semibold), {size === 'sm' ? '14px' : size === 'md' ? '16px' : '18px'}</td></tr>
-            <tr><td>Background</td><td>{`var(--btn-${variant}${galleryState !== 'default' ? '-' + galleryState : ''})`}</td></tr>
-            <tr><td>Text Color</td><td>var(--text-on-action)</td></tr>
-            <tr><td>Border</td><td>{variant === 'outlined' ? '1.5px solid var(--btn-primary)' : 'none'}</td></tr>
-            <tr><td>Variants</td><td>primary, secondary, tertiary</td></tr>
-            <tr><td>States</td><td>default, hover, pressed, disabled</td></tr>
-          </tbody>
-        </table>
+
+      <div className="card" style={{ marginTop: '24px', padding: '32px' }}>
+        <ButtonGallery />
       </div>
-    </div>
+    </>
   );
 } 

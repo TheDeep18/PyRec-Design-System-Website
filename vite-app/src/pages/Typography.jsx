@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Typography = () => (
-  <div>
+  <>
     <h1>Typography</h1>
     <section className="card">
       <h2>Design</h2>
@@ -9,8 +9,7 @@ const Typography = () => (
     </section>
     <section className="card">
       <h2>Code</h2>
-      <pre><code>{`<h1>Heading 1</h1>
-<p>Body text</p>`}</code></pre>
+      <pre><code>{`<h1>Heading 1</h1>\n<p>Body text</p>`}</code></pre>
     </section>
     <section className="card">
       <h2>Usage Guidelines</h2>
@@ -31,7 +30,7 @@ const Typography = () => (
         </tbody>
       </table>
     </section>
-  </div>
+  </>
 );
 
 export default Typography; 

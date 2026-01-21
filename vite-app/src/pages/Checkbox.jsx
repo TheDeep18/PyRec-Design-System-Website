@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import CopyCodeButton from '../components/CopyCodeButton';
+import getComponentCSSString from '../components/getComponentCSSString';
 
 const SIZES = ['sm', 'md', 'lg'];
 const STATES = ['default', 'hover', 'selected', 'indeterminate', 'disabled', 'error', 'focus', 'pressed'];
@@ -40,16 +41,7 @@ function getCodeString(size, state, showLabel, label) {
 }
 
 function getCSSString(size, state, showLabel, label) {
-  const classes = `checkbox checkbox-${size}${state && state !== 'default' ? ` is-${state}` : ''}`;
-  const checked = state === 'selected' || state === 'indeterminate';
-  const indeterminate = state === 'indeterminate';
-  const disabled = state === 'disabled';
-  return `<label class="checkbox-label">
-  <span class="${classes}">
-    <input type="checkbox"${checked ? ' checked' : ''}${indeterminate ? ' data-indeterminate="true"' : ''}${disabled ? ' disabled' : ''} />
-    <span class="checkbox-custom">${checked ? (indeterminate ? '<svg>...</svg>' : '<svg>...</svg>') : ''}</span>
-  </span>${showLabel ? ` ${label}` : ''}
-</label>`;
+  return getComponentCSSString('checkbox', { size, state });
 }
 
 function getPythonString(size, state, showLabel, label) {

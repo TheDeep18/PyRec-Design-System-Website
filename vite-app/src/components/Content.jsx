@@ -2,7 +2,9 @@ import React from 'react';
 
 const Content = ({ children }) => (
   <main className="layout-main">
-    {children}
+    <div className="main-content">
+      {children}
+    </div>
   </main>
 );
 

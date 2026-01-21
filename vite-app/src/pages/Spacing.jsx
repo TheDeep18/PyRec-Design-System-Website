@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Spacing = () => (
-  <div>
+  <>
     <h1>Spacing</h1>
     <section className="card">
       <h2>Design</h2>
@@ -28,7 +28,7 @@ const Spacing = () => (
         </tbody>
       </table>
     </section>
-  </div>
+  </>
 );
 
 export default Spacing; 

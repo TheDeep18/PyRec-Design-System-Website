@@ -1,9 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Layout from './components/Layout';
-import {
-  Home, Button, Typography, BugReportingFlow, Color, Icons, Spacing, UploadFlow, TracePalette, Viewer3D, StampTool, Accessibility, ContentStrategy, ComponentUsage, Versioning, VisualConsistency, Checkbox, TextField, UploadButton, Tags
-} from './pages';
-// ... import other pages as needed
+
+const Home = React.lazy(() => import('./pages/Home'));
+const Button = React.lazy(() => import('./pages/Button'));
+const Typography = React.lazy(() => import('./pages/Typography'));
+const BugReportingFlow = React.lazy(() => import('./pages/BugReportingFlow'));
+const Color = React.lazy(() => import('./pages/Color'));
+const Icons = React.lazy(() => import('./pages/Icons'));
+const Spacing = React.lazy(() => import('./pages/Spacing'));
+const UploadFlow = React.lazy(() => import('./pages/UploadFlow'));
+const TracePalette = React.lazy(() => import('./pages/TracePalette'));
+const Viewer3D = React.lazy(() => import('./pages/Viewer3D'));
+const StampTool = React.lazy(() => import('./pages/StampTool'));
+const Accessibility = React.lazy(() => import('./pages/Accessibility'));
+const ContentStrategy = React.lazy(() => import('./pages/ContentStrategy'));
+const ComponentUsage = React.lazy(() => import('./pages/ComponentUsage'));
+const Versioning = React.lazy(() => import('./pages/Versioning'));
+const VisualConsistency = React.lazy(() => import('./pages/VisualConsistency'));
+const Checkbox = React.lazy(() => import('./pages/Checkbox'));
+const TextField = React.lazy(() => import('./pages/TextField'));
+const UploadButton = React.lazy(() => import('./pages/UploadButton'));
+const Tags = React.lazy(() => import('./pages/Tags'));
 
 const routes = {
   '/': <Home />,
@@ -26,7 +43,6 @@ const routes = {
   '/textfield': <TextField />,
   '/upload-button': <UploadButton />,
   '/tags': <Tags />,
-  // ... add other routes here
 };
 
 function getRouteComponent() {
@@ -43,7 +59,13 @@ const App = () => {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  return <Layout>{route}</Layout>;
+  return (
+    <Layout>
+      <Suspense fallback={<div className="p-8">Loading...</div>}>
+        {route}
+      </Suspense>
+    </Layout>
+  );
 };
 
 export default App; 

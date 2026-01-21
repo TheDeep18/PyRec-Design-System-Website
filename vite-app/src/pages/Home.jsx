@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Home = () => (
-  <div>
+  <>
     <h1>Welcome to PyRec Design System</h1>
     <div className="card">
       <p>
@@ -11,7 +11,7 @@ const Home = () => (
         This is a work in progress. Please check back later for updates.
       </p>
     </div>
-  </div>
+  </>
 );
 
 export default Home; 
