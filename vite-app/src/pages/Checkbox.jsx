@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import CopyCodeButton from '../components/CopyCodeButton';
-import getComponentCSSString from '../components/getComponentCSSString';
+import getComponentCSSString from '../utils/getComponentCSSString';
 
 const SIZES = ['sm', 'md', 'lg'];
 const STATES = ['default', 'hover', 'selected', 'indeterminate', 'disabled', 'error', 'focus', 'pressed'];
